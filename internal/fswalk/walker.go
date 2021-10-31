@@ -6,9 +6,29 @@ import (
 	"sync/atomic"
 )
 
-func Walkdir(dir string) (int64, error) {
+func WalkDirNames(dir string) ([]string, error) {
+
+	m := []string{}
+
+	filepath.Walk(dir, func(root string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() {
+			m = append(m, root)
+		}
+
+		return nil
+	})
+
+	return m, nil
+
+}
+
+func WalkDir(dir string) (int64, error) {
 	var count int64
-	filepath.Walk("./", func(root string, info os.FileInfo, err error) error {
+	filepath.Walk(dir, func(root string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}

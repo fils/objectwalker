@@ -3,15 +3,26 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+
+	"github.com/gleanerio/objectwalker/internal/fswalk"
 )
 
 func main() {
-	var count int64
 
-	count, err := fswalk.WalkDir("directory")
+	// argsnp := os.Args[1:]
+	patharg := os.Args[1]
+
+	log.Printf("Scanning directory %s", patharg)
+	r, err := fswalk.WalkDirNames(patharg)
 	if err != nil {
 		log.Println(err)
 	}
 
-	fmt.Println(count)
+	for _, v := range r {
+		fmt.Println(v)
+	}
+
+	checks.DoChecks(r)
+
 }

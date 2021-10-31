@@ -1,0 +1,6 @@
+- pattern:
+  name: 'geotek files'
+  description: 'A geotek file is XYZ'
+  type: 'schema.org/DigitalObject'
+  path:
+    - '/vault/{.project}/RGB/{.file}'

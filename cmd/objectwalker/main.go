@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gleanerio/objectwalker/internal/checks"
 	"github.com/gleanerio/objectwalker/internal/fswalk"
 )
 

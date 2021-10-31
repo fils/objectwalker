@@ -30,36 +30,67 @@ func DoChecks(r []string) error {
 
 	t := "Exclude" // by default..  we don't know what the file is  (could also return an error type for this)
 	uri := ""
-	tests := CSDCOHTs()
+	tests := Testing()
 
-	d := "./mnt/wdb"
-	proj := "YUKON"
+	d := "/mnt/wdb"
+	proj := "tmp"
 
 	for _, f := range r {
 		dir, _ := filepath.Split(f)
 
 		for i := range tests {
-			if caselessPrefix(d, proj, dir, tests[i].DirPattern) {
-				// if caselessContains(dir, tests[i].DirPattern) { // TODO should become caselessPrefix(d, proj, dir, tests[i].DirPattern)
+			if caselessPrefix(d, proj, dir, tests[i].DirPattern) { // ??? if caselessContains(dir, tests[i].DirPattern) { // TODO should become caselessPrefix(d, proj, dir, tests[i].DirPattern)
 				if fileInDir(d, proj, tests[i].DirPattern, f) {
 					if caselessContainsSlice(f, tests[i].FilePattern) {
 						fileext := strings.ToLower(filepath.Ext(f))
 						s := tests[i].FileExts
 						if contains(s, fileext) {
-							// fmt.Printf("%s == %s\n", f, tests[i].Comment) //  TODO  all NewFileEntry calls should use class URI, not name like "Images"
 							t = tests[i].Comment
 							uri = tests[i].URI
+							fmt.Printf("%s == %s\n", f, tests[i].Comment) //  TODO  all NewFileEntry calls should use class URI, not name like "Images"
+							log.Printf("File %s is exclude value '%s' with uri: %s", f, t, uri)
 						}
 					}
 				}
 			}
-
-			log.Printf("File %s is exclude value %s with uri: %s", f, t, uri)
 		}
 
 	}
 
 	return nil
+}
+
+func Testing() []HTest {
+	ht := []HTest{
+		// HTest{DirPattern: "/Data/Sampling",
+		// 	FilePattern: []string{"SRF"},
+		// 	FileExts:    []string{""},
+		// 	BlackList:   []string{},
+		// 	Comment:     "SRF",
+		// 	URI:         "http://opencoredata.org/voc/csdco/v1/SRF"},
+		HTest{DirPattern: "gofiles/",
+			FilePattern: []string{},
+			FileExts:    []string{".go"},
+			BlackList:   []string{},
+			Comment:     "Go files",
+			URI:         "http://opencoredata.org/voc/csdco/v1/CML"},
+		HTest{DirPattern: "Notebooks/work/",
+			FilePattern: []string{},
+			FileExts:    []string{".ipynb"},
+			BlackList:   []string{},
+			Comment:     "Python Notebook",
+			URI:         "http://opencoredata.org/voc/csdco/v1/Car"},
+	}
+
+	return ht
+}
+
+// Test if a has prefix b    /dir1/dir2/dir3/filex  has /dir1/dir2
+// To do this as I need the base directory to remove from a
+func caselessPrefix(base, proj, a, b string) bool {
+	pref := fmt.Sprintf("%s/%s/", base, proj)
+	atl := strings.TrimPrefix(a, pref)
+	return strings.HasPrefix(strings.ToUpper(atl), strings.ToUpper(b))
 }
 
 func fileInDir(d, proj, dp, f string) bool {
@@ -89,19 +120,6 @@ func caselessContainsSlice(a string, b []string) bool {
 
 func caselessContains(a, b string) bool {
 	return strings.Contains(strings.ToUpper(a), strings.ToUpper(b))
-}
-
-// Test if a has prefix b    /dir1/dir2/dir3/filex  has /dir1/dir2
-// To do this I need the base directory to remove from a
-func caselessPrefix(base, proj, a, b string) bool {
-	pref := fmt.Sprintf("%s/%s/", base, proj)
-	// fmt.Printf("Directory Test: %s\n", pref)
-	// fmt.Printf("Directory Test: %s\n", a)
-	atl := strings.TrimPrefix(a, pref)
-	// fmt.Printf("Directory Test: %s\n", atl)
-	// fmt.Printf("Directory Test: In base %s in proj %s test if  %s has prefix %s result: %t \n", base, proj, strings.ToUpper(atl), strings.ToUpper(b),
-	// strings.HasPrefix(strings.ToUpper(atl), strings.ToUpper(b)))
-	return strings.HasPrefix(strings.ToUpper(atl), strings.ToUpper(b))
 }
 
 func contains(slice []string, item string) bool {

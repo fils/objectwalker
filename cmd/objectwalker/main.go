@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -14,16 +13,21 @@ func main() {
 	// argsnp := os.Args[1:]
 	patharg := os.Args[1]
 
+	// get files with path as array
 	log.Printf("Scanning directory %s", patharg)
 	r, err := fswalk.WalkDirNames(patharg)
 	if err != nil {
 		log.Println(err)
 	}
 
-	for _, v := range r {
-		fmt.Println(v)
-	}
+	// for _, v := range r {
+	// 	fmt.Println(v)
+	// }
 
+	// Check the array against the criteria
 	checks.DoChecks(r)
+
+	// Act on the checks...
+	// stuff here..
 
 }

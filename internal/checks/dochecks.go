@@ -23,17 +23,16 @@ type HTest struct {
 // DoChecks needs to read the config file (in memeory struct, don't really read
 // the file each time) and then return true if the file is valid for the
 // defined heuristics in the config file
-//
 func DoChecks(r []string) error {
 
 	log.Println("Reading config and doing checks")
 
-	t := "Exclude" // by default..  we don't know what the file is  (could also return an error type for this)
+	t := "Exclude" // by default..  we don't know what the file is  (could also return an error type for this?  boolean?, nil value?)
 	uri := ""
 	tests := Testing()
 
-	d := "/mnt/wdb"
-	proj := "tmp"
+	d := "/mnt/wdb" // add to config
+	proj := "tmp"   // add to config
 
 	for _, f := range r {
 		dir, _ := filepath.Split(f)
